@@ -1,8 +1,14 @@
 import Form from './Form';
 import Loading from './Loading';
-import Header from './Header';
+import HeaderButton from './HeaderButton';
+import Element from './Element';
+import List from './List';
+import NoteArea from './NoteArea';
 export {
     Form,
     Loading,
-    Header
+    HeaderButton,
+    Element,
+    List,
+    NoteArea
 };

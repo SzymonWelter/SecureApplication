@@ -1,55 +1,63 @@
-import React, { Component } from "react";
-import { Form, Header } from "components";
+import React, { useState } from "react";
+import { Form, HeaderButton } from "components";
 import { authService } from "services";
 import { signUpFormModel } from "models";
 import { Link } from "react-router-dom";
 
-class SignUp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      error: ""
-    };
-  }
+function SignUp(props) {
+  const [state, setState] = useState({
+    loading: false,
+    error: ""
+  });
 
-  submitHandler = async event => {
-    event.preventDefault();
-    const signUpModel = {
-      username: event.target.username.value,
-      password: event.target.password.value,
-      email: event.target.email.value
-    };
-    this.setState({ loading: true });
-    try {
-      await authService.signUp(signUpModel);
-    } catch (error) {
-      this.setState({ error: error.message });
-    }
-    this.setState({ loading: false });
+  const submitHandler = e => {
+    setState({ loading: true });
+    signup(e)
+      .then(() => {
+        setState({ loading: false });
+      })
+      .then(() => {
+        props.history.push("/signin");
+      })
+      .catch(error => {
+        setState({ error: error.message, loading: false });
+      });
   };
 
-  render() {
-    return (
-      <div className="page-wrapper center-child">
-        <Header link="/public" name='Public notes'/>
-        <section className="signup-section">
-          <Form
-            title="Sign up"
-            inputs={signUpFormModel}
-            onSubmit={this.submitHandler}
-            loading={this.state.loading}
-            error={this.state.error}
-          />
-          <div className="center-child">or</div>
-          <div className="center-child">
-            <Link to="/signin" className="link">
-              Sign in
-            </Link>
-          </div>
-        </section>
-      </div>
-    );
-  }
+  const onChange = () => {
+    setState({error: ''});
+  };
+
+  return (
+    <div className="page-wrapper center-child">
+      <HeaderButton link="/public" name="Public notes" />
+      <section className="signup-section">
+        <Form
+          title="Sign up"
+          inputs={signUpFormModel}
+          onSubmit={submitHandler}
+          loading={state.loading}
+          error={state.error}
+          onChange={onChange}
+        />
+        <div className="center-child">or</div>
+        <div className="center-child">
+          <Link to="/signin" className="link">
+            Sign in
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
 }
+
+async function signup(event) {
+  event.preventDefault();
+  const signUpModel = new FormData();
+  signUpModel.append("username", event.target.username.value);
+  signUpModel.append("password", event.target.password.value);
+  signUpModel.append("email", event.target.email.value);
+  return await authService.signUp(signUpModel);
+}
+
 export default SignUp;
