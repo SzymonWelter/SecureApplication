@@ -3,6 +3,7 @@ import { authService } from "./auth.service";
 import { config } from "helpers";
 
 export const requestService = {
+  request,
   get,
   post,
   put,

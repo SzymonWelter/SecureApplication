@@ -6,9 +6,17 @@ const currentUserSubject = new BehaviorSubject({
   user: cookieService.getValueOfCookie("user")
 });
 function authenticate(signInModel) {
-  return requestService.post("auth/authenticate", signInModel).then(() => {
-    currentUserSubject.next({ user: cookieService.getValueOfCookie("user") });
-  });
+  return requestService
+    .post("auth/authenticate", signInModel)
+    .then(response => response.json())
+    .then(result => {
+      if (NotSuccess(result)) {
+        throw Error(result.message);
+      }
+    })
+    .then(() => {
+      currentUserSubject.next({ user: cookieService.getValueOfCookie("user") });
+    });
 }
 
 function signUp(signUpModel) {
