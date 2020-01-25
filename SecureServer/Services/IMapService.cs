@@ -12,6 +12,6 @@ namespace SecureServer.Services
         UserModel Map(UserDTO userDTO);
         RequestResultDTO Map(RequestResultModel requestResultModel);
         UserModel Map(SignInDTO signInDTO);
-        AuthResultDTO Map(AuthResultModel result);
+        RequestResultDTO Map(AuthResultModel result);
     }
 }

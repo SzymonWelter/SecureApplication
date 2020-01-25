@@ -14,6 +14,9 @@ function SignIn(props) {
   const submitHandler = e => {
     setState({ loading: true });
     signin(e)
+    .then((result) => {
+      
+    })
       .then(() => {
         setState({ loading: false });
       })
@@ -49,10 +52,9 @@ function SignIn(props) {
 
 async function signin(event) {
   event.preventDefault();
-  const signInModel = {
-    username: event.target.username.value,
-    password: event.target.password.value
-  };
+  const signInModel = new FormData();
+  signInModel.append("username", event.target.username.value);
+  signInModel.append("password", event.target.password.value);
   return await authService.authenticate(signInModel);
 }
 

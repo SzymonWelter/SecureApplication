@@ -9,6 +9,8 @@ namespace SecureServer.Models.DAL
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public ICollection<NoteDAL> Notes {get;set;}
+        public int Attempt { get; set; }
+        public Nullable<DateTime> Blockade { get; set; }
+        public ICollection<NoteDAL> Notes { get; set; }
     }
 }

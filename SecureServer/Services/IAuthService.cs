@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using SecureServer.Models.Domain;
 
 namespace SecureServer.Services
 {
     public interface IAuthService
     {
-        AuthResultModel Authenticate(UserModel userModel);
+        Task<AuthResultModel> Authenticate (UserModel userModel);
     }
 }

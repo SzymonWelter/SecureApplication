@@ -16,19 +16,18 @@ function signUp(signUpModel) {
     .post("users", signUpModel)
     .then(response => response.json())
     .then(result => {
-      if(NotSuccess(result)){
-        throw Error(result.message)
+      if (NotSuccess(result)) {
+        throw Error(result.message);
       }
     });
 }
 
-function NotSuccess(result){
+function NotSuccess(result) {
   return !result.isSuccess;
 }
 
 function logout() {
-  requestService.post("auth/logout");
-  cookieService.removeCookie("user");
+  return requestService.post("auth/logout");
 }
 
 export const authService = {

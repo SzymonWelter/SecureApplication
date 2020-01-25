@@ -70,5 +70,4 @@ function appendBody(body, options) {
 
 function includeCredentials(options) {
   options.credentials = "include";
-  options.origin = 'http://localhost:3000';
 }

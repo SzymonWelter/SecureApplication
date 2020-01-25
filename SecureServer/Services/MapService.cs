@@ -60,12 +60,11 @@ namespace SecureServer.Services
             };
         }
 
-        public AuthResultDTO Map(AuthResultModel result)
+        public RequestResultDTO Map(AuthResultModel result)
         {
-            return new AuthResultDTO{
+            return new RequestResultDTO{
                 IsSuccess = result.IsSuccess,
-                Message = result.Message,
-                UserId = result.UserId
+                Message = result.Message
             };
         }
     }
