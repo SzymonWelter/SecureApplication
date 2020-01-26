@@ -14,15 +14,16 @@ function NoteArea(props) {
 
   const checkboxModel = {
     title: 'Public',
+    name: 'isPublic',
     type: 'checkbox',
     class: 'width-auto'
   }
   return (
     <div className="center-child">
-      <form className="note-form" id="note-area">
+      <form className="note-form" id="note-area" onSubmit={props.onSubmit}>
         <InputArea model={inputModel} />
         <div>
-          <textarea form="notearea" className="note-form__text-area"/>
+          <textarea form="note-area" className="note-form__text-area" name='text' />
         </div>
         <InputArea model={checkboxModel} class='align-right'/>
         <InputArea model={submitModel} class='align-center'/>

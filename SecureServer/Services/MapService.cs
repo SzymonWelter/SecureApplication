@@ -27,7 +27,27 @@ namespace SecureServer.Services
             };
         }
 
-        public UserDAL Map(UserModel userModel)
+        public NoteModel Map(NoteDTO noteModel){
+            return new NoteModel
+            {
+                NoteId = noteModel.NoteId,
+                Title = noteModel.Title,
+                Text = noteModel.Text,
+                IsPublic = noteModel.IsPublic
+            };
+        }
+
+        public NoteDAL MapToDAL(NoteModel noteModel){
+            return new NoteDAL
+            {
+                NoteId = noteModel.NoteId,
+                Title = noteModel.Title,
+                Text = noteModel.Text,
+                IsPublic = noteModel.IsPublic
+            };
+        }
+
+        public UserDAL MapToDAL(UserModel userModel)
         {
             return new UserDAL{
                 UserId = userModel.UserId,

@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -37,14 +38,26 @@ namespace SecureServer.Services
             {
                 return UserIsBlockedResult(user);
             }
-            /// hash password
-            /// Encode(userModel)
-            if (PasswordsDontEquals(userModel, user))
+            var hashedPassword = Encode(userModel, user.Password);
+            if (PasswordsDontEquals(hashedPassword, user.Password))
             {
                 await NoteWrongAttempt(user);
                 return WrongPasswordResult(user.UserId);
             }
             return SuccessResult(user.UserId);
+        }
+
+        private string Encode(UserModel userModel, string correctPassword)
+        {
+            byte[] forSalt = Convert.FromBase64String(correctPassword);
+            byte[] salt = new byte[16];
+            Array.Copy(forSalt, 0, salt, 0, 16);
+            var pbkdf2 = new Rfc2898DeriveBytes(userModel.Password, salt, 10000, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(20);
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+            return Convert.ToBase64String(hashBytes);
         }
 
         private AuthResultModel SuccessResult(Guid userId)
@@ -53,8 +66,8 @@ namespace SecureServer.Services
             return new AuthResultModel
             {
                 IsSuccess = true,
-                Token = token,
-                UserId = userId
+                    Token = token,
+                    UserId = userId
             };
         }
 
@@ -80,8 +93,8 @@ namespace SecureServer.Services
             return new AuthResultModel
             {
                 IsSuccess = false,
-                Message = "Wrong password",
-                UserId = userId
+                    Message = "Wrong password",
+                    UserId = userId
             };
         }
 
@@ -90,8 +103,8 @@ namespace SecureServer.Services
             return new AuthResultModel
             {
                 IsSuccess = false,
-                Message = $"Your account is blocked until {((DateTime)user.Blockade).ToString("t")}",
-                UserId = user.UserId
+                    Message = $"Your account is blocked until {((DateTime)user.Blockade).ToString("t")}",
+                    UserId = user.UserId
             };
         }
 
@@ -121,9 +134,9 @@ namespace SecureServer.Services
 
         }
 
-        private bool PasswordsDontEquals(UserModel userModel, UserDAL user)
+        private bool PasswordsDontEquals(string password, string correctPassword)
         {
-            return user.Password != userModel.Password;
+            return password != correctPassword;
         }
 
         private AuthResultModel UserDoesntExistsResult()
@@ -131,7 +144,7 @@ namespace SecureServer.Services
             return new AuthResultModel
             {
                 IsSuccess = false,
-                Message = "User doesnt exists"
+                    Message = "User doesnt exists"
             };
         }
 

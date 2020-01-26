@@ -14,9 +14,6 @@ function SignIn(props) {
   const submitHandler = e => {
     setState({ loading: true });
     signin(e)
-    .then((result) => {
-      
-    })
       .then(() => {
         setState({ loading: false });
       })

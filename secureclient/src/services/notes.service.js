@@ -1,24 +1,37 @@
-import { requestService } from "./requests.service"
+import { requestService } from "./requests.service";
+import { cookieService } from "./cookie.service";
 
-function getPublicNotes(){
-    return requestService.get('notes/public');
+function getPublicNotes() {
+  return requestService.get("public/notes");
 }
 
-function getPrivateNotes(){
-    requestService.get();
+function getUserNotes() {
+  const userId = cookieService.getValueOfCookie("user");
+  return requestService
+    .get(`${userId}/notes`)
+    .then(response => response.json());
 }
 
-function addNote(){
-    requestService.post();
+function addNote(data) {
+  const userId = cookieService.getValueOfCookie("user");
+  return requestService
+    .post(`${userId}/notes`, data)
+    .then(response => response.json())
+    .then(result => {
+        if(!result.isSuccess){
+            throw Error(result.message);
+        }
+        return result;
+    });
 }
 
-function removeNote(){
-    requestService.del();
+function removeNote() {
+  requestService.del();
 }
 
 export const notesService = {
-    getPublicNotes,
-    getPrivateNotes,
-    addNote,
-    removeNote
-}
+  getPublicNotes,
+  getUserNotes,
+  addNote,
+  removeNote
+};

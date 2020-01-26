@@ -8,7 +8,9 @@ namespace SecureServer.Services
     {
         NoteModel Map(NoteDAL noteDal);
         NoteDTO Map(NoteModel noteModel);
-        UserDAL Map(UserModel userModel);
+        NoteModel Map(NoteDTO noteModel);
+        UserDAL MapToDAL(UserModel userModel);
+        NoteDAL MapToDAL(NoteModel noteModel);
         UserModel Map(UserDTO userDTO);
         RequestResultDTO Map(RequestResultModel requestResultModel);
         UserModel Map(SignInDTO signInDTO);
